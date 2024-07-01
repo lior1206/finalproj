@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  web:
+    image: liorgerbi/finalproj:0.1
+    ports:
+      - "35000:35000"
+    environment:
+      - DB_USERNAME= "lior"
+      - DB_PASSWORD= "lior1206"
+      - DB_HOST='localhost'
+
+    

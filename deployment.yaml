@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: liorgerbi/finalproj:0.1
+        ports:
+        - containerPort: 35000
+        env:
+        - name: DB_USERNAME
+          value: lior
+        - name: DB_PASSWOED
+          value: lior1206
+        - name: DB_HOST
+          value: mongodb-service     
+        - name: FLASK_SECRET_KEY
+          value: "3f5eed7b6884e653ca2debd0653a92bfe9389a0351dd9589"
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: flask-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flask-config
+data:
+  FLASK_ENV: "production"

@@ -1,0 +1,6 @@
+.dockerignore
+.env
+compose.yaml
+mongodb-values.yaml
+.gitignor
+__pycache__

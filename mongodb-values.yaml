@@ -1,0 +1,9 @@
+architecture: standalone
+auth:
+  rootPassword: "12062002"
+  usernames:
+    - lior
+  passwords:
+    - lior1206
+  databases:
+    - finaldb
