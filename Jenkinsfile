@@ -18,17 +18,18 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    def dockerImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f Dockerfile .")
+                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f Dockerfile .")
                 }
             }
         }
+
         stage('Merge Request Checks') {
             when {
                 expression {
-                    // Only merge if the branch is not 'master'
                     return env.BRANCH_NAME != 'master'
                 }
             }
@@ -39,19 +40,34 @@ pipeline {
                 }
             }
         }
+
         stage('Merge to Master') {
             when {
                 expression {
-                    // Only merge into 'master' if the branch is not 'master'
                     return env.BRANCH_NAME != 'master'
                 }
             }
             steps {
                 script {
                     echo "Merging branch ${env.BRANCH_NAME} to 'master'..."
-                    sh "git checkout master"
-                    sh "git merge origin/${env.BRANCH_NAME} --no-ff -m \"Merge ${env.BRANCH_NAME} branch\""
-                    sh "git push origin master"
+                    sh """
+                        git config user.name "jenkins"
+                        git config user.email "jenkins@example.com"
+                        git checkout master
+                        git pull origin master
+                        git merge --no-ff origin/${env.BRANCH_NAME} -m "Merge ${env.BRANCH_NAME} branch"
+                        git push origin master
+                    """
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('', 'docker-credentials-id') {
+                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}").push()
+                    }
                 }
             }
         }
