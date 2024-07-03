@@ -1,6 +1,6 @@
 pipeline {
-   agent{
-        kubernetes{
+    agent {
+        kubernetes {
             yamlFile 'build-pod.yaml'
             defaultContainer 'ez-docker-helm-build'
         }
@@ -18,21 +18,45 @@ pipeline {
                 checkout scm
             }
         }
-        stage('build docker image') {     
-             steps{
-
-                script{
-                  def dockerImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f Dockerfile .")
-                    
-                    // Example of commands to execute inside the Docker container
-                    dockerImage.inside {
-                        sh 'echo "Running inside the Docker container"'
-                        // Add more commands as needed
-                    }
-                } 
-             }
-        }    
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def dockerImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f Dockerfile .")
+                }
+            }
+        }
+        stage('Merge Request Checks') {
+            when {
+                expression {
+                    // Only merge if the branch is not 'master'
+                    return env.BRANCH_NAME != 'master'
+                }
+            }
+            steps {
+                script {
+                    echo "Running merge request checks for branch ${env.BRANCH_NAME}..."
+                    // Example: Run tests, validate code, etc.
+                }
+            }
+        }
+        stage('Merge to Master') {
+            when {
+                expression {
+                    // Only merge into 'master' if the branch is not 'master'
+                    return env.BRANCH_NAME != 'master'
+                }
+            }
+            steps {
+                script {
+                    echo "Merging branch ${env.BRANCH_NAME} to 'master'..."
+                    sh "git checkout master"
+                    sh "git merge origin/${env.BRANCH_NAME} --no-ff -m \"Merge ${env.BRANCH_NAME} branch\""
+                    sh "git push origin master"
+                }
+            }
+        }
     }
+
     post {
         success {
             echo 'Pipeline succeeded! Triggering further actions...'
