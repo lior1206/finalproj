@@ -61,7 +61,7 @@ pipeline {
                 }
             }
             steps {
-                withCredentials([string(credentialsId: 'githubcred', usernameVariable:'USERNAME' , passwordVariable:'PASSWORD' )]) {
+                withCredentials([usernamepassword(credentialsId: 'githubcred', usernameVariable:'USERNAME' , passwordVariable:'PASSWORD' )]) {
                     script {
                         def branchName = env.BRANCH_NAME
                         def pullRequestTitle = "Merge ${branchName} into master"
