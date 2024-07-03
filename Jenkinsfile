@@ -7,10 +7,11 @@ pipeline {
     }
 
     environment {
-        DOCKER_REGISTRY = 'liorgerbi'
-        IMAGE_NAME = 'finalproj'
+        DOCKER_IMAGE = 'liorgerbi/finalproj'
         IMAGE_TAG = 'latest'
-        GIT_BRANCH ='featcher'
+        GITHUB_API_URL = 'https://api.github.com'
+        GITHUB_REPO = 'lior1206/finalproj'
+        GITHUB_TOKEN = credentials('github-creds')
     }
 
     stages {
@@ -23,51 +24,42 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f Dockerfile .")
+                    dockerImage = docker.build("${DOCKER_IMAGE}:${IMAGE_TAG}", "--no-cache .")
                 }
             }
         }
 
-        stage('Merge Request Checks') {
+        stage('Push Docker image') {
             when {
-                expression {
-                    return env.BRANCH_NAME != 'master'
-                }
+                branch 'main'
             }
             steps {
                 script {
-                    echo "Running merge request checks for branch ${env.BRANCH_NAME}..."
-                    // Example: Run tests, validate code, etc.
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-creds') (
+                        dockerImage.push("latest")
+                    )
                 }
             }
         }
 
-        stage('Merge to Master') {
+        stage('Create merge request') {
             when {
-                expression {
-                    return env.BRANCH_NAME != 'master'
+                not {
+                    branch 'main'
                 }
             }
             steps {
-                script {
-                    echo "Merging branch ${env.BRANCH_NAME} to 'master'..."
-                    sh """
-                        git config user.name "jenkins"
-                        git config user.email "jenkins@example.com"
-                        git checkout master
-                        git pull origin master
-                        git merge --no-ff origin/${env.BRANCH_NAME} -m "Merge ${env.BRANCH_NAME} branch"
-                        git push origin master
-                    """
-                }
-            }
-        }
+                withCredentials([string(credentialsId: 'github-creds', variable: 'GITHUB_TOKEN')]) {
+                    script {
+                        def branchName = env.BRANCH_NAME
+                        def pullRequestTitle = "Merge ${branchName} into main"
+                        def pullRequestBody = "Automatically generated merge request for branch ${branchName}"
 
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('', 'docker-credentials-id') {
-                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}").push()
+                        sh """
+                            curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+                            -d '{ "title": "${pullRequestTitle}", "body": "${pullRequestBody}", "head": "${branchName}", "base": "main" }' \
+                            ${GITHUB_API_URL}/repos/${GITHUB_REPO}/pulls
+                        """
                     }
                 }
             }
