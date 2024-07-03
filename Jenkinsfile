@@ -21,6 +21,18 @@ pipeline {
             }
         }
 
+
+
+        stage('Prepare') {
+            steps {
+                script {
+                    // Add the safe directory configuration
+                    def safeDirectory = "/home/jenkins/agent/workspace/finalproj_${env.BRANCH_NAME}"
+                    sh "git config --global --add safe.directory ${safeDirectory}"
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
