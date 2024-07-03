@@ -6,7 +6,7 @@ pipeline {
             steps {
                 // Checkout the code from the Git repository
                 - checkout scm
-                - sh ls -l
+                - sh "ls -l"
 
             }
         }
