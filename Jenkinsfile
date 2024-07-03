@@ -10,6 +10,7 @@ pipeline {
         DOCKER_REGISTRY = 'liorgerbi'
         IMAGE_NAME = 'finalproj'
         IMAGE_TAG = 'latest'
+        GIT_BRANCH ='featcher'
     }
 
     stages {
