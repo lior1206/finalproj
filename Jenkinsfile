@@ -11,7 +11,7 @@ pipeline {
         IMAGE_TAG = 'latest'
         GITHUB_API_URL = 'https://api.github.com'
         GITHUB_REPO = 'lior1206/finalproj'
-        GITHUB_TOKEN = credentials('github-creds')
+        GITHUB_TOKEN ='githubcred'
     }
 
     stages {
@@ -31,7 +31,7 @@ pipeline {
 
         stage('Push Docker image') {
             when {
-                branch 'main'
+                branch 'master'
             }
             steps {
                 script {
@@ -45,19 +45,19 @@ pipeline {
         stage('Create merge request') {
             when {
                 not {
-                    branch 'main'
+                    branch 'master'
                 }
             }
             steps {
-                withCredentials([string(credentialsId: 'github-creds', variable: 'GITHUB_TOKEN')]) {
+                withCredentials([string(credentialsId: 'githubcred', usernameVariable:'USERNAME' , passwordVariable:'PASSWORD' )]) {
                     script {
                         def branchName = env.BRANCH_NAME
-                        def pullRequestTitle = "Merge ${branchName} into main"
+                        def pullRequestTitle = "Merge ${branchName} into master"
                         def pullRequestBody = "Automatically generated merge request for branch ${branchName}"
 
                         sh """
-                            curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            -d '{ "title": "${pullRequestTitle}", "body": "${pullRequestBody}", "head": "${branchName}", "base": "main" }' \
+                            curl -X POST -u ${USERNAME}:${PASSWORD} \
+                            -d '{ "title": "${pullRequestTitle}", "body": "${pullRequestBody}", "head": "${branchName}", "base": "master" }' \
                             ${GITHUB_API_URL}/repos/${GITHUB_REPO}/pulls
                         """
                     }
