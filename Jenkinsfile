@@ -22,8 +22,12 @@ pipeline {
              steps{
 
                 script{
-                   def dockerImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f Dockerfile .")
+                  def dockerImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f Dockerfile .")
+                    
+                    // Example of commands to execute inside the Docker container
                     dockerImage.inside {
+                        sh 'echo "Running inside the Docker container"'
+                        // Add more commands as needed
                     }
                 } 
              }
