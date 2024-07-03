@@ -1,20 +1,34 @@
 pipeline {
-    agent any
+   agent{
+        kubernetes{
+            yamlFile 'build-pod.yaml'
+            defaultContainer 'ez-docker-helm-build'
+        }
+    }
+
+    environment {
+        DOCKER_REGISTRY = 'liorgerbi'
+        IMAGE_NAME = 'finalproj'
+        IMAGE_TAG = 'latest'
+    }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from the Git repository
                 checkout scm
-
-                // Example: List files in the Jenkins workspace
-                sh 'ls -l'
             }
         }
+        stage('build docker image') {     
+             steps{
 
-        // Add more stages as needed for build, test, deploy, etc.
+                script{
+                   def dockerImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}", "-f Dockerfile .")
+                    dockerImage.inside {
+                    }
+                } 
+             }
+        }    
     }
-
     post {
         success {
             echo 'Pipeline succeeded! Triggering further actions...'
