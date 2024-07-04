@@ -11,8 +11,7 @@ pipeline {
         IMAGE_TAG = 'latest'
         GITHUB_API_URL = 'https://api.github.com'
         GITHUB_REPO = 'lior1206/finalproj'
-        GITHUB_TOKEN ='githubcred'
-        DOCKER_TOKEN ='docker-creds'
+        GITHUB_TOKEN = 'githubcred' // Make sure this is configured correctly in Jenkins
     }
 
     stages {
@@ -22,12 +21,10 @@ pipeline {
             }
         }
 
-
-
         stage('Prepare') {
             steps {
                 script {
-                    // Add the safe directory configuration
+                    // Add the safe directory configuration if needed
                     def safeDirectory = "/home/jenkins/agent/workspace/finalproj_${env.BRANCH_NAME}"
                     sh "git config --global --add safe.directory ${safeDirectory}"
                 }
@@ -42,20 +39,20 @@ pipeline {
             }
         }
 
-        stage('Push Docker image') {
+        stage('Push Docker Image') {
             when {
                 branch 'master'
             }
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-creds') (
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-creds') {
                         dockerImage.push("latest")
-                    )
+                    }
                 }
             }
         }
 
-        stage('Create merge request') {
+        stage('Create Merge Request') {
             when {
                 not {
                     branch 'master'
@@ -69,8 +66,8 @@ pipeline {
                         def pullRequestBody = "Automatically generated merge request for branch ${branchName}"
 
                         sh """
-                            curl -X POST -u ${USERNAME}:${PASSWORD} \
-                            -d '{ "title": "${pullRequestTitle}", "body": "${pullRequestBody}", "head": "${branchName}", "base": "master" }' \
+                            curl -X POST -u ${USERNAME}:${PASSWORD} \\
+                            -d '{ "title": "${pullRequestTitle}", "body": "${pullRequestBody}", "head": "${branchName}", "base": "master" }' \\
                             ${GITHUB_API_URL}/repos/${GITHUB_REPO}/pulls
                         """
                     }
