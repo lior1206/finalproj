@@ -12,6 +12,7 @@ pipeline {
         GITHUB_API_URL = 'https://api.github.com'
         GITHUB_REPO = 'lior1206/finalproj'
         GITHUB_TOKEN ='githubcred'
+        DOCKER_TOKEN ='docker-creds'
     }
 
     stages {
