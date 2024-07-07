@@ -12,7 +12,7 @@ pipeline {
         GITHUB_API_URL = 'https://api.github.com'
         GITHUB_REPO = 'lior1206/finalproj'
         GITHUB_TOKEN = 'githubcred' 
-        HELM_CHART_DIR = 'final-helm/' 
+        HELM_CHART_DIR = 'final-helm' 
         ARGOCD_APP_NAME = 'finalcd' 
         ARGOCD_SERVER = 'localhost:8080' 
     }
