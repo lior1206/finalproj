@@ -57,6 +57,9 @@ pipeline {
         }
 
         stage('Update Helm Chart') {
+            when {
+                branch 'master'
+            }
             steps {
                 script {
                     sh "helm repo add myrepo ${HELM_REPO_URL}"
@@ -69,6 +72,9 @@ pipeline {
         }
 
         stage('Trigger ArgoCD Sync') {
+            when {
+                branch 'master'
+            }
             steps {
                 script {
                     def webhookURL = "http://${ARGOCD_SERVER}/api/webhook?project=default&application=${ARGOCD_APP_NAME}"
