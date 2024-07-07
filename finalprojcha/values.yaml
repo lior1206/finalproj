@@ -1,0 +1,9 @@
+appName: "flask-app"
+
+namespace: "default"
+
+image:
+    name: "liorgerbi/finalproj"
+    tag: 0.1
+
+    
