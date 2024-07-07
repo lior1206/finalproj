@@ -15,6 +15,7 @@ pipeline {
         HELM_CHART_DIR = 'final-helm' 
         ARGOCD_APP_NAME = 'finalcd' 
         ARGOCD_SERVER = 'localhost:8080' 
+        HELM_REPO_URL = 'https://lior1206.github.io/finalproj/final-helm/' // Update with your GitHub Pages URL
     }
 
     stages {
@@ -58,8 +59,11 @@ pipeline {
         stage('Update Helm Chart') {
             steps {
                 script {
+                    sh "helm repo add myrepo ${HELM_REPO_URL}"
                     sh "helm repo update"
-                    sh "helm upgrade --install ${ARGOCD_APP_NAME} ${HELM_CHART_DIR} --set image.repository=${DOCKER_IMAGE} --set image.tag=${IMAGE_TAG}"
+                    sh "helm package ${HELM_CHART_DIR}"
+                    sh "helm repo index --url ${HELM_REPO_URL} --merge index.yaml ."
+                    sh "helm repo update"
                 }
             }
         }
