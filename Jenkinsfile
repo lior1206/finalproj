@@ -15,7 +15,7 @@ pipeline {
         HELM_CHART_DIR = 'final-helm' 
         ARGOCD_APP_NAME = 'finalcd' 
         ARGOCD_SERVER = 'localhost:8080' 
-        HELM_REPO_URL = 'https://lior1206.github.io/finalproj/final-helm/' // Update with your GitHub Pages URL
+        HELM_REPO_URL = 'https://github.com/lior1206/finalproj/tree/master/final-helm' // Update with your GitHub Pages URL
     }
 
     stages {
