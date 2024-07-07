@@ -1,5 +1,5 @@
 # Define variables
-$repoUrl = "https://your-repo-url/charts/"
+$repoUrl = "https://github.com/lior1206/finalproj/tree/master/final-helm"
 $indexFile = "./index.yaml"
 $helmChartDir = "."  # Update this to your Helm chart directory path
 
