@@ -11,7 +11,11 @@ pipeline {
         IMAGE_TAG = 'latest'
         GITHUB_API_URL = 'https://api.github.com'
         GITHUB_REPO = 'lior1206/finalproj'
-        GITHUB_TOKEN = 'githubcred' // Make sure this is configured correctly in Jenkins
+        GITHUB_TOKEN = 'githubcred' 
+        HELM_CHART_DIR = 'final-helm' 
+        ARGOCD_APP_NAME = 'finalcd' 
+        ARGOCD_SERVER = 'localhost:8080' 
+        HELM_REPO_URL = 'https://lior1206.github.io/finalproj/final-helm/' // Update with your GitHub Pages URL
     }
 
     stages {
@@ -48,6 +52,33 @@ pipeline {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-creds') {
                         dockerImage.push("latest")
                     }
+                }
+            }
+        }
+
+        stage('Update Helm Chart') {
+            when {
+                branch 'master'
+            }
+            steps {
+                script {
+                    sh "helm repo add myrepo ${HELM_REPO_URL}"
+                    sh "helm repo update"
+                    sh "helm package ${HELM_CHART_DIR}"
+                    sh "helm repo index --url ${HELM_REPO_URL} --merge index.yaml ."
+                    sh "helm repo update"
+                }
+            }
+        }
+
+        stage('Trigger ArgoCD Sync') {
+            when {
+                branch 'master'
+            }
+            steps {
+                script {
+                    def webhookURL = "http://${ARGOCD_SERVER}/api/webhook?project=default&application=${ARGOCD_APP_NAME}"
+                    sh "curl -X POST $webhookURL"
                 }
             }
         }
