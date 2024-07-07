@@ -78,9 +78,7 @@ pipeline {
                 script {
                     def webhookURL = "http://${ARGOCD_SERVER}/api/webhook?project=default&application=${ARGOCD_APP_NAME}"
                     echo "Triggering ArgoCD sync with webhook URL: ${webhookURL}"
-                    sh """#!/bin/bash
-                         curl -X POST ${webhookURL} -H 'Content-Type: application/json' -d '{}'
-                      """
+                    sh "curl -X POST ${webhookURL} -H 'Content-Type: application/json' -d '{}'"
                 }
             }
         }
