@@ -14,7 +14,7 @@ pipeline {
         GITHUB_TOKEN = 'githubcred' 
         HELM_CHART_DIR = 'final-helm' 
         ARGOCD_APP_NAME = 'finalcd' 
-        ARGOCD_SERVER = 'localhost:443' 
+        ARGOCD_SERVER = 'svc/argocd:8080' 
         HELM_REPO_URL = 'https://raw.githubusercontent.com/lior1206/finalproj/master/final-helm' // Update with your GitHub Pages URL
     }
 
