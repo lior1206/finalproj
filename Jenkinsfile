@@ -61,9 +61,9 @@ pipeline {
             }
             steps {
                 script { 
-                    sh """cd final-helm"
-                     "ls -la"
-                     "sed 's/version:.*/version: 1.0.${BUILD_NUMBER}/' Chart.yaml -i"""
+                    sh """cd final-helm
+                     ls -la
+                     sed 's/version:.*/version: 1.0.${BUILD_NUMBER}/' Chart.yaml -i"""
                     sh "cd .."
                     sh "helm repo add myrepo ${HELM_REPO_URL}"
                     sh "helm repo update"
