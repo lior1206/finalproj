@@ -15,7 +15,7 @@ pipeline {
         HELM_CHART_DIR = 'final-helm' 
         ARGOCD_APP_NAME = 'finalcd' 
         ARGOCD_SERVER = 'argocd-service:8080' 
-        HELM_REPO_URL = 'https://raw.githubusercontent.com/lior1206/finalproj/master/final-helm' // Update with your GitHub Pages URL
+        HELM_REPO_URL = 'https://raw.githubusercontent.com/lior1206/finalproj/master/final-helm'
     }
 
     stages {
@@ -28,7 +28,6 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    // Add the safe directory configuration if needed
                     def safeDirectory = "/home/jenkins/agent/workspace/finalproj_${env.BRANCH_NAME}"
                     sh "git config --global --add safe.directory ${safeDirectory}"
                 }
@@ -78,7 +77,8 @@ pipeline {
             steps {
                 script {
                     def webhookURL = "http://${ARGOCD_SERVER}/api/webhook?project=default&application=${ARGOCD_APP_NAME}"
-                    sh "curl -X POST $webhookURL"
+                    echo "Triggering ArgoCD sync with webhook URL: ${webhookURL}"
+                    sh "curl -X POST ${webhookURL} -H 'Content-Type: application/json' -d '{}'"
                 }
             }
         }
@@ -110,11 +110,9 @@ pipeline {
     post {
         success {
             echo 'Pipeline succeeded! Triggering further actions...'
-            // Add post-build actions here, such as notifications or triggering downstream jobs
         }
         failure {
             echo 'Pipeline failed! Sending notifications...'
-            // Add actions to handle pipeline failures
         }
     }
 }
