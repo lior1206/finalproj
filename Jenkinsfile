@@ -60,9 +60,10 @@ pipeline {
                 branch 'master'
             }
             steps {
-                script {
+                script { 
                     sh "cd final-helm"
-                    sh "sed 's/version:.*/version: 1.0.${BUILD_NUMBER}/' chart.yaml -i"
+                    sh "ls -la"
+                    sh "sed 's/version:.*/version: 1.0.${BUILD_NUMBER}/' Chart.yaml -i"
                     sh "cd .."
                     sh "helm repo add myrepo ${HELM_REPO_URL}"
                     sh "helm repo update"
