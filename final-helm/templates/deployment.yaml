@@ -24,7 +24,7 @@ spec:
         - name: DB_PASSWORD
           value: lior1206
         - name: DB_HOST
-          value: mongodb-service     
+          value: mongodb      
         - name: FLASK_SECRET_KEY
           value: "3f5eed7b6884e653ca2debd0653a92bfe9389a0351dd9589"
         volumeMounts:
