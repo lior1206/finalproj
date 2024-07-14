@@ -131,8 +131,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'githubcred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     script {
                         sh """
-                            git config --global user.email "you@example.com"
-                            git config --global user.name "Your Name"
+                            git config --global user.email "liogrb7@gmail.com"
+                            git config --global user.name "lior"
+                            git checkout master
                             git add .
                             git commit -m "Update Helm chart version to 1.0.${BUILD_NUMBER} [skip ci]"
                             git push https://${USERNAME}:${PASSWORD}@github.com/${GITHUB_REPO}.git master
