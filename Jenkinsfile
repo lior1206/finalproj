@@ -45,7 +45,7 @@ pipeline {
         stage('test'){
             steps {
                 script{
-                    docker.image('${DOCKER_IMAGE}:${IMAGE_TAG}').inside {
+                    docker.image("${DOCKER_IMAGE}:${IMAGE_TAG}").inside {
                         sh 'pytest test.py'
                 }
             }
