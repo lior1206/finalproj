@@ -1,0 +1,24 @@
+apiVersion: v1
+entries:
+  finalprojcha:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-07-14T16:17:07.730969668Z"
+    description: A Helm chart for Kubernetes
+    digest: 01ab898396b3138825e4a5b431bcc61c7cf747b29c45fd6fd489ff2c1c5a5aaa
+    name: finalprojcha
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/lior1206/finalproj/master/final-helm/finalprojcha-1.0.45.tgz
+    version: 1.0.45
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-07-14T16:17:07.731064226Z"
+    description: A Helm chart for Kubernetes
+    digest: 6ab3ba0bbef8f0697b9f30aa2097d26681c0d82da769dcf0e6ed79e36864c36e
+    name: finalprojcha
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/lior1206/finalproj/master/final-helm/final-helm/finalprojcha-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-07-14T16:17:07.730726061Z"
