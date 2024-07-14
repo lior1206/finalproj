@@ -21,6 +21,26 @@ body {
     max-width: 400px;
     width: 100%;
     color: #865ce9;
+    margin-left : 20px;
+    margin-right: 20px;
+}
+.avg {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    width: 80%;
+    color: #865ce9;
+}
+.graf {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    width: 100%;
+    color: #865ce9;
 }
 
 h1 {

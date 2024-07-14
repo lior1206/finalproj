@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: less-than-3-replicas-alert
+  namespace: prometheus
+spec:
+  groups:
+  - name: instance.rules
+    rules:
+    - alert: LessThan3Replicas
+      expr: kube_deployment_status_replicas_available{namespace="default",deployment="flask-app"} < 3
+      for: 3m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Deployment {{ $labels.deployment }} has less than 3 replicas available"
+        description: "Deployment {{ $labels.deployment }} in namespace {{ $labels.namespace }} has less than 3 replicas available for more than 1 minute."
+        runbook_url: "http://link-to-your-runbook"
