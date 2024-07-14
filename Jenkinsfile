@@ -11,10 +11,10 @@ pipeline {
         IMAGE_TAG = 'latest'
         GITHUB_API_URL = 'https://api.github.com'
         GITHUB_REPO = 'lior1206/finalproj'
-        GITHUB_TOKEN = 'githubcred' 
-        HELM_CHART_DIR = 'final-helm' 
-        ARGOCD_APP_NAME = 'finalcd' 
-        ARGOCD_SERVER = 'argocd-server.argocd.svc.cluster.local:80' 
+        GITHUB_TOKEN = 'githubcred'
+        HELM_CHART_DIR = 'final-helm'
+        ARGOCD_APP_NAME = 'finalcd'
+        ARGOCD_SERVER = 'argocd-server.argocd.svc.cluster.local:80'
         HELM_REPO_URL = 'https://raw.githubusercontent.com/lior1206/finalproj/master/final-helm'
     }
 
@@ -42,16 +42,15 @@ pipeline {
             }
         }
 
-        stage('test'){
+        stage('test') {
             steps {
-                script{
+                script {
                     docker.image("${DOCKER_IMAGE}:${IMAGE_TAG}").inside {
                         sh 'pytest test.py'
+                    }
                 }
             }
         }
-        }
-
 
         stage('Push Docker Image') {
             when {
@@ -72,17 +71,18 @@ pipeline {
             }
             steps {
                 script { 
-                    sh """cd final-helm
-                     ls -la
-                     sed 's/version:.*/version: 1.0.${BUILD_NUMBER}/' Chart.yaml -i
-                     cat Chart.yaml"""
-                    sh "cd .."
-                    
-                    sh "helm repo add myrepo ${HELM_REPO_URL}"
-                    sh "helm repo update"
-                    sh "helm package ${HELM_CHART_DIR}"
-                    sh "helm repo index --url ${HELM_REPO_URL} --merge index.yaml ."
-                    sh "helm repo update"
+                    sh """
+                    cd final-helm
+                    ls -la
+                    sed 's/version:.*/version: 1.0.${BUILD_NUMBER}/' Chart.yaml -i
+                    cat Chart.yaml
+                    cd ..
+                    helm repo add myrepo ${HELM_REPO_URL}
+                    helm repo update
+                    helm package ${HELM_CHART_DIR}
+                    helm repo index --url ${HELM_REPO_URL} --merge index.yaml .
+                    helm repo update
+                    """
                 }
             }
         }
@@ -122,6 +122,25 @@ pipeline {
                 }
             }
         }
+
+        stage('Commit Changes to GitHub') {
+            when {
+                branch 'master'
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'githubcred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    script {
+                        sh """
+                            git config --global user.email "you@example.com"
+                            git config --global user.name "Your Name"
+                            git add .
+                            git commit -m "Update Helm chart version to 1.0.${BUILD_NUMBER} [skip ci]"
+                            git push https://${USERNAME}:${PASSWORD}@github.com/${GITHUB_REPO}.git master
+                        """
+                    }
+                }
+            }
+        }
     }
 
     post {
@@ -133,4 +152,3 @@ pipeline {
         }
     }
 }
-// comment
