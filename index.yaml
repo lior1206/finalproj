@@ -3,7 +3,17 @@ entries:
   finalprojcha:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-07-14T16:26:22.146542545Z"
+    created: "2024-07-14T16:29:11.698247984Z"
+    description: A Helm chart for Kubernetes
+    digest: a3380f287840f27695f86d75e924022501469c191f50e7854f66140e0fe9b65f
+    name: finalprojcha
+    type: application
+    urls:
+    - https://raw.githubusercontent.com/lior1206/finalproj/master/final-helm/finalprojcha-1.0.49.tgz
+    version: 1.0.49
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-07-14T16:29:11.697968331Z"
     description: A Helm chart for Kubernetes
     digest: 33f3b343de4c9dd72075e680142bf656514eb24bc7797e2e99ac537aeff7db17
     name: finalprojcha
@@ -13,7 +23,7 @@ entries:
     version: 1.0.48
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-07-14T16:26:22.146313638Z"
+    created: "2024-07-14T16:29:11.695712506Z"
     description: A Helm chart for Kubernetes
     digest: 30fdc04902d6678dc2abcb9f3b6adf7313a1bf779246c02335e415544109addf
     name: finalprojcha
@@ -23,7 +33,7 @@ entries:
     version: 1.0.47
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-07-14T16:26:22.146039196Z"
+    created: "2024-07-14T16:29:11.69537613Z"
     description: A Helm chart for Kubernetes
     digest: 1f87ce16ff5076d4ca49d8ee9dc86e7c8b98d494af8c106babb658560359c1f1
     name: finalprojcha
@@ -33,7 +43,7 @@ entries:
     version: 1.0.46
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-07-14T16:26:22.145752584Z"
+    created: "2024-07-14T16:29:11.695116482Z"
     description: A Helm chart for Kubernetes
     digest: 01ab898396b3138825e4a5b431bcc61c7cf747b29c45fd6fd489ff2c1c5a5aaa
     name: finalprojcha
@@ -43,7 +53,7 @@ entries:
     version: 1.0.45
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-07-14T16:26:22.146758286Z"
+    created: "2024-07-14T16:29:11.698422389Z"
     description: A Helm chart for Kubernetes
     digest: 6ab3ba0bbef8f0697b9f30aa2097d26681c0d82da769dcf0e6ed79e36864c36e
     name: finalprojcha
@@ -51,4 +61,4 @@ entries:
     urls:
     - https://raw.githubusercontent.com/lior1206/finalproj/master/final-helm/final-helm/finalprojcha-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-14T16:26:22.145345391Z"
+generated: "2024-07-14T16:29:11.694712773Z"
