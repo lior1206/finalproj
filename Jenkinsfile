@@ -75,7 +75,7 @@ pipeline {
                     sh """cd final-helm
                      ls -la
                      sed 's/version:.*/version: 1.0.${BUILD_NUMBER}/' Chart.yaml -i
-                     cat chart.yaml"""
+                     cat Chart.yaml"""
                     sh "cd .."
                     
                     sh "helm repo add myrepo ${HELM_REPO_URL}"
