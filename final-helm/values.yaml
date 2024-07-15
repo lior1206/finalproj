@@ -4,6 +4,6 @@ namespace: "default"
 
 image:
     name: "liorgerbi/finalproj"
-    tag: 1.0.77
+    tag: 1.0.78
 
     
