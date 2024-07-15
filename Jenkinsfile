@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'liorgerbi/finalproj'
-        IMAGE_TAG = '1.0.${BUILD_NUMBER}'
+        //IMAGE_TAG = '1.0.${BUILD_NUMBER}'
         GITHUB_API_URL = 'https://api.github.com'
         GITHUB_REPO = 'lior1206/finalproj'
         GITHUB_TOKEN = 'githubcred'
@@ -45,7 +45,7 @@ pipeline {
         stage('test') {
             steps {
                 script {
-                    docker.image("${DOCKER_IMAGE}:${IMAGE_TAG}").inside {
+                    docker.image("${DOCKER_IMAGE}:1.0.${BUILD_NUMBER}").inside {
                         sh 'pytest test.py'
                     }
                 }
