@@ -75,7 +75,7 @@ pipeline {
                     cd final-helm
                     ls -la
                     sed 's/version:.*/version: 1.0.${BUILD_NUMBER}/' Chart.yaml -i
-                    sed 's/tag:.*/tag:1.0.${BUILD_NUMBER}/' values.yaml
+                    sed 's/tag:.*/tag:1.0.${BUILD_NUMBER}/' values.yaml -i
                     cd ..
                     helm repo add myrepo ${HELM_REPO_URL}
                     helm repo update
