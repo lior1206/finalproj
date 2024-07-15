@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'liorgerbi/finalproj'
-        IMAGE_TAG = 'latest'
+        IMAGE_TAG = '1.0.${BUILD_NUMBER}'
         GITHUB_API_URL = 'https://api.github.com'
         GITHUB_REPO = 'lior1206/finalproj'
         GITHUB_TOKEN = 'githubcred'
@@ -59,7 +59,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-creds') {
-                        dockerImage.push("latest")
+                        dockerImage.push("1.0.${BUILD_NUMBER}")
                     }
                 }
             }
@@ -75,7 +75,7 @@ pipeline {
                     cd final-helm
                     ls -la
                     sed 's/version:.*/version: 1.0.${BUILD_NUMBER}/' Chart.yaml -i
-                    cat Chart.yaml
+                    sed 's/tag:.*/tag:1.0.${BUILD_NUMBER}/' values.yaml
                     cd ..
                     helm repo add myrepo ${HELM_REPO_URL}
                     helm repo update
