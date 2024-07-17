@@ -114,6 +114,18 @@ def create_app(test_config=None):
 
         return redirect(url_for('calc'))
 
+    @app.route('/api/weekly_expenses', methods=['GET'])
+    def get_weekly_expenses():
+        username = session['username']
+        today = datetime.now().strftime("%Y-%m-%d")
+        week_ago = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
+
+        # Fetch user's weekly expenses
+        weekly_expenses = list(app.expenses_collection.find({'username': username, 'date': {'$gte': week_ago, '$lte': today}}))
+        weekly_expenses = [{**expense, '_id': str(expense['_id'])} for expense in weekly_expenses]
+
+        return jsonify({'weekly_expenses': weekly_expenses})
+
     return app
 
 if __name__ == '__main__':

@@ -9,13 +9,12 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
 </head>
 <body>
     <div class="container-login100" style="background-image: url('{{ url_for('static', filename='images/bg-01.jpg') }}');">
         <div class="avg">
             <h2>Average Daily Expenses:</h2>
-            <h1>${{ average_daily_expenses | round(2) }}</h1>
+            <h1 id="averageDailyExpenses">${{ average_daily_expenses | round(2) }}</h1>
         </div>
         <div class="calculator">
             <form id="expensesForm" method="POST">
@@ -38,9 +37,16 @@
                 <label for="others">Other expenses:</label>
                 <input type="number" id="others" name="others" min="0" step="0.01" required>
                 
-                <button type="submit" >Submit</button>
+                <input type="submit" value="Calculate">
             </form>
+            <div id="totalExpenses">
+                <!-- Total expenses will be displayed here -->
+            </div>
+            <div id="statusMessage">
+                <!-- Status message will be displayed here -->
+            </div>
         </div>
+        
         <div class="graf">
             <canvas id="weeklyExpensesChart"></canvas>
         </div>
@@ -63,33 +69,80 @@
             
             // Display total expenses
             document.getElementById('totalExpenses').innerHTML = `<h2>Total Expenses: $${total.toFixed(2)}</h2>`;
+            
+            // Submit the form data to the server via an AJAX request
+            fetch('/calc/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(new FormData(event.target))
+            })
+            .then(response => response.json())
+            .then(data => {
+                const statusMessage = document.getElementById('statusMessage');
+                if (data.status === 'success') {
+                    statusMessage.innerHTML = `<p style="color:green;">${data.message}</p>`;
+                    updateChartAndAverage();
+                } else {
+                    statusMessage.innerHTML = `<p style="color:red;">Failed to save expenses.</p>`;
+                }
+            })
+            .catch(error => console.error('Error:', error));
         });
 
-        const weeklyExpenses = {{ weekly_expenses | tojson }};
+        let weeklyExpenses = {{ weekly_expenses | tojson }};
         const ctx = document.getElementById('weeklyExpensesChart').getContext('2d');
-        const labels = weeklyExpenses.map(exp => exp.date);
-        const data = weeklyExpenses.map(exp => exp.total);
+        let chart;
 
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Daily Expenses',
-                    data: data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+        function renderChart() {
+            const labels = weeklyExpenses.map(exp => exp.date);
+            const data = weeklyExpenses.map(exp => exp.total);
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Daily Expenses',
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+
+        function updateChartAndAverage() {
+            fetch('/api/weekly_expenses')
+            .then(response => response.json())
+            .then(data => {
+                weeklyExpenses = data.weekly_expenses;
+                renderChart();
+                updateAverageDailyExpenses();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updateAverageDailyExpenses() {
+            const totalExpenses = weeklyExpenses.reduce((sum, expense) => sum + expense.total, 0);
+            const averageDailyExpenses = totalExpenses / 7;
+            document.getElementById('averageDailyExpenses').innerText = `$${averageDailyExpenses.toFixed(2)}`;
+        }
+
+        renderChart();
     </script>
 </body>
 </html>
