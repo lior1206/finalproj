@@ -38,7 +38,7 @@ def create_app(test_config=None):
 
     app.json_encoder = JSONEncoder
 
-    @app.route('/', methods=['GET', 'POST'])
+    # @app.route('/', methods=['GET', 'POST'])
     def login():
         if request.method == 'GET':
             return render_template("login.html")
