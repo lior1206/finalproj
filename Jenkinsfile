@@ -148,8 +148,21 @@ pipeline {
         success {
             echo 'Pipeline succeeded! Triggering further actions...'
         }
+      
+
         failure {
-            echo 'Pipeline failed! Sending notifications...'
+            echo "Pipeline failed."
+            echo "Cleaning up..."
+            script {
+                try {
+                    sh 'docker stop flaskapp || true'
+                    sh 'docker rm flaskapp || true'
+                    sh 'docker rmi ${DOCKER_IMAGE}:latest || true'
+                } catch (Exception e) {
+                    echo "Cleanup failed: ${e.message}"
+                }
+            }
+            cleanWs()
         }
     }
 }
