@@ -38,7 +38,7 @@ def create_app(test_config=None):
 
     app.json_encoder = JSONEncoder
 
-    # @app.route('/', methods=['GET', 'POST'])
+    @app.route('/', methods=['GET', 'POST'])
     def login():
         if request.method == 'GET':
             return render_template("login.html")
@@ -57,7 +57,7 @@ def create_app(test_config=None):
                 else:
                     return "Incorrect password", 401
 
-    @app.route('/calc/', methods=['GET', 'POST'])
+    #@app.route('/calc/', methods=['GET', 'POST'])
     def calc():
         if 'username' not in session:
             return redirect(url_for('login'))
