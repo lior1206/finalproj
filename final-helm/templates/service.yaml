@@ -10,4 +10,4 @@ spec:
     - protocol: TCP
       port: 35000
       targetPort: 35000
-  type: LoadBalancer
+  type: ClusterIP
