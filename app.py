@@ -57,7 +57,7 @@ def create_app(test_config=None):
                 else:
                     return "Incorrect password", 401
 
-    #@app.route('/calc/', methods=['GET', 'POST'])
+    @app.route('/calc/', methods=['GET', 'POST'])
     def calc():
         if 'username' not in session:
             return redirect(url_for('login'))
