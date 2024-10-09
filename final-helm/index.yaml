@@ -9,6 +9,6 @@ entries:
       name: finalprojcha
       type: application
       urls:
-        - https://raw.githubusercontent.com/lior1206/finalproj/master/final-helm/charts/finalprojcha-0.1.0.tgz
+        - https://github.com/lior1206/finalproj/master/final-helm/charts/finalprojcha-0.1.0.tgz
       version: 0.1.0
 generated: "2024-07-07T13:45:11.5327558+03:00"
