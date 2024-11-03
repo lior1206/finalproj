@@ -30,6 +30,7 @@ def create_app(test_config=None):
     # Setup logging
     logging.basicConfig(level=logging.DEBUG)
 
+# turns the data to jason format 
     class JSONEncoder(json.JSONEncoder):
         def default(self, o):
             if isinstance(o, ObjectId):
